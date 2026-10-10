@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080808">
+<title>A Little Surprise</title>
+<style>
+:root {
+  color-scheme:dark;
+  --red:#ff3038;
+  --white:#f7f7f7
+}
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0;
+  min-height:100vh;
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding:18px;
+  background:#080808;
+  color:var(--white);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif
+}
+#bg {
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:.4
+}
+.glow {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 50% 42%,#ff20201c,transparent 42%),radial-gradient(ellipse at 5% 95%,#ff30380d,transparent 30%)
+}
+.card {
+  position:relative;
+  width:min(100%,440px);
+  padding:clamp(25px,6vw,36px) clamp(18px,5vw,30px);
+  text-align:center;
+  border:1px solid #ff303833;
+  border-radius:24px;
+  background:#101010e8;
+  box-shadow:0 25px 90px #000b,0 0 42px #ff20200a;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  animation:appear .7s ease-out both
+}
+.card:before {
+  content:"";
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:-1px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),#fff,transparent);
+  box-shadow:0 0 13px #ff303870
+}
+.reactor {
+  position:relative;
+  width:104px;
+  height:104px;
+  margin:0 auto 23px;
+  display:grid;
+  place-items:center
+}
+.ring {
+  position:absolute;
+  border:1px solid #ff30385c;
+  border-radius:50%
+}
+.r1 {
+  inset:2px;
+  border-right-color:var(--red);
+  border-bottom-color:transparent;
+  animation:spin 8s linear infinite
+}
+.r2 {
+  inset:12px;
+  border-color:#ffffff55;
+  border-left-color:transparent;
+  animation:reverse 6s linear infinite
+}
+.r3 {
+  inset:23px;
+  border-style:dashed;
+  border-color:#ff30383b;
+  animation:spin 22s linear infinite
+}
+.r1:after,.r2:after {
+  content:"";
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 10px var(--red)
+}
+.r1:after {
+  right:9px;
+  top:14px
+}
+.r2:after {
+  left:5px;
+  bottom:17px;
+  background:#fff;
+  box-shadow:0 0 9px #fff
+}
+.core {
+  width:34px;
+  height:34px;
+  border:1px solid #ff3038b3;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  background:#ff30380d;
+  box-shadow:0 0 25px #ff303817,inset 0 0 14px #ff303812;
+  animation:core 3s ease-in-out infinite
+}
+.core svg {
+  width:20px;
+  height:20px
+}
+h1 {
+  margin:0;
+  font-size:clamp(28px,7.5vw,37px);
+  line-height:1.1;
+  letter-spacing:-.045em;
+  font-weight:740;
+  white-space:nowrap;
+  color:#fff
+}
+h1 span {
+  display:inline-block;
+  color:transparent;
+  background:linear-gradient(105deg,#fff 0%,#ffb5b8 22%,#ff3038 43%,#fff 53%,#ff3038 68%,#fff 100%);
+  background-size:250% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  filter:drop-shadow(0 0 13px #ff303829);
+  animation:textShine 4s linear infinite
+}
+.divider {
+  height:1px;
+  margin:24px 4px 19px;
+  background:linear-gradient(90deg,transparent,#ffffff24,transparent)
+}
+.timer {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px
+}
+.unit {
+  padding:12px 4px 10px;
+  border:1px solid #ffffff16;
+  border-radius:12px;
+  background:linear-gradient(145deg,#ffffff09,#ff303805);
+  min-width:0
+}
+.number {
+  font-variant-numeric:tabular-nums;
+  font-size:clamp(21px,6vw,29px);
+  line-height:1.1;
+  font-weight:720;
+  letter-spacing:-.04em;
+  color:#fff
+}
+.unit:nth-child(2) .number,.unit:nth-child(4) .number {
+  color:#ff555c
+}
+.caption {
+  margin-top:7px;
+  color:#88888f;
+  font:9px/1.2 ui-monospace,monospace;
+  letter-spacing:.09em;
+  text-transform:uppercase
+}
+.surprise {
+  position:relative;
+  display:block;
+  margin:20px auto 0;
+  padding:17px 13px;
+  border:1px solid #ff30386b;
+  border-radius:15px;
+  color:#fff;
+  background:linear-gradient(125deg,#ff30381c,#ffffff07 52%,#ff303812);
+  font-size:14px;
+  line-height:1.5;
+  overflow:hidden;
+  animation:surpriseIn .8s ease-out both;
+  box-shadow:inset 0 0 22px #ff30380c,0 0 28px #ff30381c
+}
+.surprise:before {
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:2px;
+  background:linear-gradient(180deg,transparent,var(--red),#fff,transparent);
+  box-shadow:0 0 12px #ff3038aa
+}
+.unlock-button {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  margin:20px auto 0;
+  padding:16px 14px;
+  border:1px solid #ff30386b;
+  border-radius:15px;
+  color:#fff;
+  background:linear-gradient(125deg,#ff30381c,#ffffff07 52%,#ff303812);
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.02em;
+  text-decoration:none;
+  box-shadow:inset 0 0 18px #ff30380c,0 0 18px #ff303814;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease,opacity .2s ease;
+  overflow:hidden;
+}
+.unlock-button:not(.locked) {
+  border-color:#ff626a;
+  background:linear-gradient(110deg,#ff30384d,#171010 48%,#ff30382e);
+  box-shadow:inset 0 0 20px #ff30381c,0 0 12px #ff30383d,0 0 30px #ff30381c;
+  animation:unlockGlow 2s ease-in-out infinite;
+}
+.unlock-button:not(.locked):hover {
+  transform:translateY(-2px);
+  border-color:#ff9a9f;
+  box-shadow:inset 0 0 24px #ff303827,0 0 16px #ff303866,0 0 38px #ff30382e;
+}
+.unlock-button:not(.locked):active { transform:scale(.98); }
+.unlock-button.locked { cursor:not-allowed; opacity:.72; }
+.unlock-button .button-icon { font-size:17px; }
+@keyframes unlockGlow {
+  50% { box-shadow:inset 0 0 24px #ff303820,0 0 18px #ff30385c,0 0 38px #ff30382b; }
+}
+.surprise-date {
+  margin-bottom:7px;
+  color:#ff626a;
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.22em;
+  text-align:center
+}
+.surprise-date span {
+  padding:0 5px;
+  color:#fff
+}
+.surprise-copy {
+  display:block;
+  color:#fff;
+  font-size:14px;
+  font-weight:650;
+  letter-spacing:.02em;
+  text-align:center;
+  text-shadow:0 0 18px #ff30384d
+}
+.surprise .heart {
+  display:inline-block;
+  margin-left:3px;
+  color:var(--red);
+  animation:heart 1.4s ease-in-out infinite;
+  filter:drop-shadow(0 0 6px #ff30385c)
+}
+@keyframes spin {
+  to {
+  transform:rotate(360deg)
+}
+}
+@keyframes reverse {
+  to {
+  transform:rotate(-360deg)
+}
+}
+@keyframes core {
+  50% {
+  transform:scale(1.07);
+  box-shadow:0 0 30px #ff30382b,inset 0 0 17px #ff303820
+}
+}
+@keyframes appear {
+  from {
+  opacity:0;
+  transform:translateY(10px)
+}
+to {
+  opacity:1;
+  transform:translateY(0)
+}
+}
+@keyframes textShine {
+  to {
+  background-position:250% center
+}
+}
+@keyframes surpriseIn {
+  from {
+  opacity:0;
+  transform:translateY(7px) scale(.98)
+}
+to {
+  opacity:1;
+  transform:translateY(0) scale(1)
+}
+}
+@keyframes heart {
+  50% {
+  transform:scale(1.22)
+}
+}
+@media(max-width:380px) {
+  body {
+  padding:12px
+}
+.card {
+  padding:23px 13px;
+  border-radius:21px
+}
+.reactor {
+  width:88px;
+  height:88px;
+  margin-bottom:20px
+}
+.r2 {
+  inset:10px
+}
+.r3 {
+  inset:20px
+}
+h1 {
+  font-size:clamp(23px,7vw,28px)
+}
+.timer {
+  gap:5px
+}
+.unit {
+  padding:11px 2px 9px
+}
+.number {
+  font-size:22px
+}
+.caption {
+  font-size:8px
+}
+}
+@media(max-height:620px) {
+  body {
+  overflow:auto
+}
+.card {
+  padding-top:20px;
+  padding-bottom:20px
+}
+.reactor {
+  width:75px;
+  height:75px;
+  margin-bottom:14px
+}
+.r2 {
+  inset:9px
+}
+.r3 {
+  inset:17px
+}
+.divider {
+  margin:17px 4px 14px
+}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+  animation:none!important
+}
+}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true">
+</canvas>
+<div class="glow" aria-hidden="true">
+</div>
+<main class="card">
+<div class="reactor" aria-hidden="true">
+<div class="ring r1">
+</div>
+<div class="ring r2">
+</div>
+<div class="ring r3">
+</div>
+<div class="core">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="12" cy="12" r="3"/>
+<path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1m0-14.2L17 7M7 17l-2.1 2.1"/>
+</svg>
+</div>
+</div>
+<h1>Under <span>Maintenance</span>
+</h1>
+<div class="divider">
+</div>
+<div class="timer" role="timer" aria-label="Countdown">
+<div class="unit">
+<div class="number" id="days">--</div>
+<div class="caption">Days</div>
+</div>
+<div class="unit">
+<div class="number" id="hours">--</div>
+<div class="caption">Hours</div>
+</div>
+<div class="unit">
+<div class="number" id="minutes">--</div>
+<div class="caption">Minutes</div>
+</div>
+<div class="unit">
+<div class="number" id="seconds">--</div>
+<div class="caption">Seconds</div>
+</div>
+</div>
+<div class="surprise" id="surprise">
+<div class="surprise-date">11 OCTOBER <span>·</span> 11:11 AM</div>
+<span class="surprise-copy">A little surprise for u <span class="heart">♥</span></span>
+<a class="unlock-button locked" id="unlockButton" href="#" aria-disabled="true">
+  <span class="button-icon" id="buttonIcon">⌑</span>
+  <span id="buttonText">Locked until 11:11 AM</span>
+</a>
+</div>
+</main>
+<script>
+
+(() => {
+  const target = new Date('2026-10-11T11:11:00+05:30').getTime();
+  let permanentlyUnlocked = Date.now() >= target;
+  const ids = ['days', 'hours', 'minutes', 'seconds'];
+  const pad = value => String(value).padStart(2, '0');
+
+  function updateCountdown() {
+    if (Date.now() >= target) {
+      permanentlyUnlocked = true;
+    }
+    const remaining = permanentlyUnlocked ? 0 : Math.max(0, target - Date.now());
+    const values = [
+      Math.floor(remaining / 86400000),
+      Math.floor(remaining / 3600000) % 24,
+      Math.floor(remaining / 60000) % 60,
+      Math.floor(remaining / 1000) % 60
+    ];
+
+    ids.forEach((id, index) => {
+      document.getElementById(id).textContent = index === 0
+        ? String(values[index])
+        : pad(values[index]);
+    });
+
+    const button = document.getElementById('unlockButton');
+    const buttonText = document.getElementById('buttonText');
+    const buttonIcon = document.getElementById('buttonIcon');
+    if (remaining === 0) {
+      document.querySelector('.timer').setAttribute('aria-label', 'Surprise unlocked');
+      button.href = 'https://abhinavranjanchaudhari-svg.github.io/Bday/';
+      button.classList.remove('locked');
+      button.removeAttribute('aria-disabled');
+      buttonText.textContent = 'Open your surprise';
+      buttonIcon.textContent = '↗';
+      button.setAttribute('target', '_blank');
+      button.setAttribute('rel', 'noopener');
+    } else {
+      button.href = '#';
+      button.classList.add('locked');
+      button.setAttribute('aria-disabled', 'true');
+      buttonText.textContent = 'Locked until 11:11 AM';
+      buttonIcon.textContent = '⌑';
+      button.removeAttribute('target');
+    }
+  }
+
+  document.getElementById('unlockButton').addEventListener('click', event => {
+    if (Date.now() < target) event.preventDefault();
+  });
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  const canvas = document.getElementById('bg');
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  let width;
+  let height;
+  let drops = [];
+  let lastFrame = 0;
+  const fontSize = 15;
+  const characters = '01<>/{}[]';
+
+  function resizeCanvas() {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * pixelRatio;
+    canvas.height = height * pixelRatio;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    drops = Array.from(
+      { length: Math.ceil(width / fontSize) },
+      () => Math.random() * height / fontSize
+    );
+  }
+
+  function drawBackground(time) {
+    requestAnimationFrame(drawBackground);
+    if (time - lastFrame < 65) return;
+    lastFrame = time;
+
+    context.fillStyle = 'rgba(8, 8, 8, .16)';
+    context.fillRect(0, 0, width, height);
+    context.font = fontSize + 'px monospace';
+
+    for (let index = 0; index < drops.length; index++) {
+      context.fillStyle = Math.random() > .985
+        ? 'rgba(255, 48, 56, .82)'
+        : 'rgba(220, 220, 225, .23)';
+      context.fillText(characters[Math.random() * characters.length | 0], index * fontSize, drops[index] * fontSize);
+
+      if (drops[index] * fontSize > height && Math.random() > .98) {
+        drops[index] = 0;
+      }
+      drops[index] += .25 + Math.random() * .35;
+    }
+  }
+
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+  resizeCanvas();
+  requestAnimationFrame(drawBackground);
+})();
+</script>
+</body>
+</html>
